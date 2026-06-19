@@ -367,14 +367,13 @@ header.top-bar {
   align-items: center;
   justify-content: center;
   margin-bottom: 0.8rem;
-  /* تمت إزالة overflow: hidden للسماح للرقم بالظهور خارج الإطار نصفه */
 }
 
 .product-img-wrapper img {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1 / 1; /* إجبار الصورة على أن تكون مربعة 100% */
   object-fit: cover;
-  border-radius: 12px; /* توحيد الحواف مع الحاوية */
+  border-radius: 12px;
 }
 
 .product-title {
@@ -806,7 +805,6 @@ header.top-bar {
 /* Custom Updates for Stock and Toast */
 .stock-badge {
   position: absolute;
-  /* جعلها في الأسفل واستخدام الـ Transform لتنصيفها على الحافة */
   bottom: 0;
   right: 10px;
   transform: translateY(50%);
@@ -829,7 +827,7 @@ header.top-bar {
   align-items: center;
   justify-content: center;
   z-index: 4;
-  border-radius: 12px; /* توحيد الحواف */
+  border-radius: 12px;
 }
 
 .out-of-stock-text {
