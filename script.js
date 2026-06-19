@@ -116,6 +116,51 @@ let activeCategory = "all";
 let searchQuery = "";
 let showFavoritesOnly = false;
 
+window.showToast = function(msg) {
+  const toast = document.getElementById('toast-msg');
+  if(toast) {
+    toast.innerText = msg;
+    toast.style.opacity = 1;
+    setTimeout(() => { toast.style.opacity = 0; }, 2500);
+  }
+}
+
+window.openProductDetails = function(id) {
+  const product = products.find(p => p.id === id);
+  if(!product) return;
+
+  document.getElementById('details-img').src = product.image;
+  document.getElementById('details-title').innerText = product.name;
+  document.getElementById('details-price').innerText = product.price;
+  document.getElementById('details-desc').innerText = product.description || "لا يوجد وصف متوفر لهذا المنتج.";
+
+  const addBtn = document.getElementById('details-add-cart-btn');
+  const stockNum = parseInt(product.stock) || 0;
+
+  if (stockNum <= 0) {
+    addBtn.innerText = "غير متوفر";
+    addBtn.style.background = "#cbd5e1";
+    addBtn.style.cursor = "not-allowed";
+    addBtn.onclick = () => window.showToast("هذا المنتج نفذت الكمية");
+  } else {
+    const inCart = cartItems.some((i) => i.id === product.id);
+    if (inCart) {
+        addBtn.innerText = "مضاف مسبقاً للسلة";
+        addBtn.style.background = "#10b981";
+    } else {
+        addBtn.innerText = "إضافة للسلة";
+        addBtn.style.background = "var(--primary)";
+    }
+    addBtn.style.cursor = "pointer";
+    addBtn.onclick = () => {
+        addToCart(product.id);
+        document.getElementById('product-details-modal').classList.remove('active');
+    };
+  }
+
+  document.getElementById('product-details-modal').classList.add('active');
+}
+
 function renderCategories() {
   const list = document.getElementById("categories-list");
   if (!list) return;
@@ -197,27 +242,45 @@ function renderProducts() {
     const heartColor = isFavorite ? "#ef4444" : "#94a3b8";
     const heartFill = isFavorite ? "#ef4444" : "none";
 
+    const stockNum = parseInt(product.stock) || 0;
+    const isOutOfStock = stockNum <= 0;
+    const stockBadgeHtml = `<div class="stock-badge">المتبقي ${stockNum}</div>`;
+    const outOfStockOverlayHtml = isOutOfStock ? `<div class="out-of-stock-overlay"><div class="out-of-stock-text">غير متوفر</div></div>` : "";
+
+    let finalButtonHtml = "";
+    if (isOutOfStock) {
+      finalButtonHtml = `<button class="btn-add-cart disabled" style="background:#cbd5e1; cursor:not-allowed;" onclick="showToast('هذا المنتج نفذت الكمية')">غير متوفر</button>`;
+    } else {
+      finalButtonHtml = `
+            <button class="${btnClass}" id="btn-add-${product.id}">
+                ${btnIcon}
+                ${btnText}
+            </button>`;
+    }
+
     card.innerHTML = `
-            <div class="product-img-wrapper" style="position: relative;">
+            <div class="product-img-wrapper" style="position: relative; cursor: pointer;" onclick="openProductDetails(${product.id})">
                 <button class="favorite-btn" data-id="${product.id}" style="position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.9); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="${heartFill}" stroke="${heartColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                     </svg>
                 </button>
                 <img src="${product.image}" loading="lazy" alt="${product.name}">
+                ${stockBadgeHtml}
+                ${outOfStockOverlayHtml}
             </div>
             <h3 class="product-title">${product.name}</h3>
             <div class="product-price">${product.price}</div>
             <div class="product-stars">${starsHTML}</div>
-            <button class="${btnClass}" id="btn-add-${product.id}">
-                ${btnIcon}
-                ${btnText}
-            </button>
+            ${finalButtonHtml}
         `;
 
     productsList.appendChild(card);
-    const btn = card.querySelector(`#btn-add-${product.id}`);
-    if (btn) btn.onclick = () => addToCart(product.id);
+    
+    if (!isOutOfStock) {
+        const btn = card.querySelector(`#btn-add-${product.id}`);
+        if (btn) btn.onclick = () => addToCart(product.id);
+    }
 
     const favBtn = card.querySelector(".favorite-btn");
     if (favBtn) {
@@ -709,6 +772,14 @@ document.addEventListener("DOMContentLoaded", () => {
         navAccount.classList.add("active");
       });
     }
+  }
+  
+  // Close details modal
+  const closeDetailsBtn = document.getElementById("close-details-btn");
+  if (closeDetailsBtn) {
+    closeDetailsBtn.addEventListener("click", () => {
+      document.getElementById("product-details-modal").classList.remove("active");
+    });
   }
 });
 
