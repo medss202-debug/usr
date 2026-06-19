@@ -807,8 +807,7 @@ header.top-bar {
 .stock-badge {
   position: absolute;
   bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 8px;
   background: #fdf2f8;
   color: #be185d;
   padding: 4px 12px;
