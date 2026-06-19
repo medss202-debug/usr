@@ -367,11 +367,12 @@ header.top-bar {
   align-items: center;
   justify-content: center;
   margin-bottom: 0.8rem;
+  overflow: hidden; /* تم الإرجاع لقص الحواف كما في التصميم الأساسي */
 }
 
 .product-img-wrapper img {
   width: 100%;
-  aspect-ratio: 1 / 1; /* إجبار الصورة على أن تكون مربعة 100% */
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 12px;
 }
@@ -806,15 +807,13 @@ header.top-bar {
 .stock-badge {
   position: absolute;
   bottom: 0;
-  right: 10px;
-  transform: translateY(50%);
-  background: #fdf2f8;
-  color: #be185d;
-  padding: 4px 12px;
-  border-radius: 20px;
+  right: 0;
+  background: #ffffff;
+  color: #000000;
+  padding: 4px 10px;
+  border-radius: 0; /* مستطيل حاد الزوايا بدون حواف */
   font-weight: 800;
-  font-size: 0.8rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-size: 0.85rem;
   white-space: nowrap;
   z-index: 5;
 }
