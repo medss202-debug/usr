@@ -802,3 +802,58 @@ header.top-bar {
 .success-btn:hover {
   background: #059669;
 }
+
+/* Custom Updates for Stock and Toast */
+.stock-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fdf2f8;
+  color: #be185d;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  z-index: 5;
+}
+
+.out-of-stock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+}
+
+.out-of-stock-text {
+  background: #ef4444;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 4px;
+  font-weight: bold;
+  transform: rotate(-15deg);
+  font-size: 1.1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#toast-msg {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 10000;
+  font-weight: bold;
+  font-size: 0.95rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
